@@ -22,9 +22,7 @@ public class VilleDAO {
 
 	public static List<Ville> listeVilles(String insee, String nomVille) throws SQLException {
 		Statement stmt = connection();
-		String sql = "SELECT * FROM ville_france WHERE Code_commune_INSEE LIKE '%?%' AND Nom_commune LIKE '%?%'";
-		ResultSet rst = stmt.executeQuery(initialisationRequetePreparee(sql,
-        		insee, nomVille));
+		ResultSet rst = stmt.executeQuery("SELECT * FROM ville_france WHERE Code_commune_INSEE LIKE '%"+insee+"%' AND Nom_commune LIKE '%"+nomVille+"%'");
 		List<Ville> villes = new ArrayList<Ville>();	
 		while(rst.next()) {
 			Ville ville = new Ville(rst.getString("Code_commune_INSEE"), rst.getString("Nom_commune"), rst.getString("Code_postal"), rst.getDouble("Latitude"), rst.getDouble("Longitude"));
@@ -60,13 +58,4 @@ public class VilleDAO {
 		Statement stmt = connection();
 		stmt.execute("DELETE FROM ville_france WHERE Code_commune_INSEE LIKE '"+insee+"'");
 	}
-	
-	protected static String initialisationRequetePreparee(String sql, Object... objets) {
-		String[] listeSQL = (sql+" ").split("\\?");
-		StringBuilder newSQL = new StringBuilder(listeSQL[0]);
-		for(int i = 0; i<objets.length; i++) {
-			newSQL.append("\"" + objets[i] + "\"" + listeSQL[i+1]);
-		}
-		return newSQL.toString().replaceAll("\"null\"", "null");
-	}	
 }

@@ -10,9 +10,6 @@ public class Application
 {
 	private static Logger logger = Logger.getLogger(Application.class.getName());
 	
-	private Application() {
-	}
-	
     public static void main( String[] args )
     {
         try {
