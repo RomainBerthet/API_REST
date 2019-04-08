@@ -12,12 +12,12 @@ import com.bean.Ville;
 
 public class VilleDAO {
 
-	public static List<Ville> listeVilles() throws SQLException {
+	public static List<Ville> listeVilles(String insee, String nom) throws SQLException {
 		Statement stmt = connection();
-		ResultSet rst = stmt.executeQuery("SELECT * FROM ville_france");
+		ResultSet rst = stmt.executeQuery("SELECT * FROM ville_france WHERE Code_commune_INSEE LIKE '%"+insee+"%' AND Nom_commune LIKE '%"+nom+"%'");
 		List<Ville> villes = new ArrayList<Ville>();	
 		while(rst.next()) {
-			Ville ville = new Ville(rst.getInt("Code_commune_INSEE"), rst.getString("Nom_commune"), rst.getInt("Code_postal"), rst.getString("Latitude"), rst.getString("Longitude"));
+			Ville ville = new Ville(rst.getString("Code_commune_INSEE"), rst.getString("Nom_commune"), rst.getString("Code_postal"), rst.getDouble("Latitude"), rst.getDouble("Longitude"));
 			villes.add(ville);
 		}
 		return villes;
@@ -26,12 +26,28 @@ public class VilleDAO {
 	private static Statement connection() {
 		try {
 			DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-			Connection connect = DriverManager.getConnection("jdbc:mysql://localhost/TWIC?user=root&password=");
+			Connection connect = DriverManager.getConnection("jdbc:mysql://localhost/TWIC?serverTimezone=Australia/Melbourne&user=root&password=");
 			Statement stm = connect.createStatement();
 			return stm;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static void ajouterModifVille(String insee, String nom, String cp, String lati, String longi) throws SQLException {
+		List<Ville> ville = listeVilles(insee, "");
+		Statement stmt = connection();
+		if (ville.size()==1) {
+			stmt.executeUpdate("UPDATE ville_france SET Code_commune_INSEE='"+insee+"', Nom_commune='"+nom+"', Code_postal='"+cp+"', Latitude='"+lati+"', Longitude='"+longi+"' WHERE Code_commune_INSEE="+insee);
+		} else if (ville.isEmpty()) {
+			stmt.execute("INSERT INTO ville_france (Code_commune_INSEE, Nom_commune, Code_postal, Latitude, Longitude) VALUES ('"+insee+"', '"+nom+"', '"+cp+"', '"+lati+"', '"+longi+"')");
+			
+		}
+	}
+
+	public static void supprimerVille(String insee) throws SQLException {
+		Statement stmt = connection();
+		stmt.execute("DELETE FROM ville_france WHERE Code_commune_INSEE LIKE '"+insee+"'");
 	}
 }

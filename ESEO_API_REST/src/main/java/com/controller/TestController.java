@@ -9,22 +9,42 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bean.Ville;
 import com.dao.VilleDAO;
+
+import com.bean.Ville;
 
 @RestController
 public class TestController {
-	@RequestMapping(value="/test", method=RequestMethod.GET)
+	@RequestMapping(value="/get", method=RequestMethod.GET)
 	@ResponseBody
-	public String get(@RequestParam(required = false, value="value") String value) {
-		System.out.println("Appel GET");
-		System.out.println("value : " + value);
-		return value;
+	public List<Ville> get(@RequestParam(required = false, defaultValue="", value="insee") String insee, 
+			@RequestParam(required = false, defaultValue="", value="nom") String nom) throws SQLException {
+		return VilleDAO.listeVilles(insee, nom);
 	}
 	
-	@RequestMapping(value="/villes", method=RequestMethod.GET)
+	@RequestMapping(value="/post", method=RequestMethod.POST)
 	@ResponseBody
-	public List<Ville> get() throws SQLException {
-		return VilleDAO.listeVilles();
+	public void post(@RequestParam(required = true, value="insee") String insee, 
+			@RequestParam(required = true, value="nom") String nom,
+			@RequestParam(required = true, value="cp") String cp,
+			@RequestParam(required = true, value="lati") String lati,
+			@RequestParam(required = true, value="longi") String longi) throws SQLException {
+		VilleDAO.ajouterModifVille(insee, nom, cp, lati, longi);
+	}
+	
+	@RequestMapping(value="/put", method=RequestMethod.PUT)
+	@ResponseBody
+	public void put(@RequestParam(required = true, value="insee") String insee, 
+			@RequestParam(required = true, value="nom") String nom,
+			@RequestParam(required = true, value="cp") String cp,
+			@RequestParam(required = true, value="lati") String lati,
+			@RequestParam(required = true, value="longi") String longi) throws SQLException {
+		VilleDAO.ajouterModifVille(insee, nom, cp, lati, longi);
+	}
+	
+	@RequestMapping(value="/delete", method=RequestMethod.DELETE)
+	@ResponseBody
+	public void delete(@RequestParam(required = false, defaultValue="", value="insee") String insee) throws SQLException {
+		VilleDAO.supprimerVille(insee);
 	}
 }
