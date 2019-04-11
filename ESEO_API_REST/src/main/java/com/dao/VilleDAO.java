@@ -2,6 +2,7 @@ package com.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,8 +22,10 @@ public class VilleDAO {
 	}
 
 	public static List<Ville> listeVilles(String insee, String nomVille) throws SQLException {
-		Statement stmt = connection();
-		ResultSet rst = stmt.executeQuery("SELECT * FROM ville_france WHERE Code_commune_INSEE LIKE '%"+insee+"%' AND Nom_commune LIKE '%"+nomVille+"%' ORDER BY Nom_commune");
+		DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/TWIC?serverTimezone=Australia/Melbourne&user=root&password=");
+		PreparedStatement pstmt = con.prepareStatement("SELECT * FROM ville_france WHERE Code_commune_INSEE LIKE '%"+insee+"%' AND Nom_commune LIKE '%"+nomVille+"%' ORDER BY Nom_commune");
+		ResultSet rst = pstmt.executeQuery();
 		List<Ville> villes = new ArrayList<Ville>();	
 		while(rst.next()) {
 			Ville ville = new Ville(rst.getString("Code_commune_INSEE"), rst.getString("Nom_commune"), rst.getString("Code_postal"), rst.getDouble("Latitude"), rst.getDouble("Longitude"));
