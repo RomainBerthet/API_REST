@@ -24,9 +24,8 @@ public class VilleDAO {
 	public static List<Ville> listeVilles(String insee, String nomVille) throws SQLException {
 		DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
 		Connection con = DriverManager.getConnection("jdbc:mysql://localhost/TWIC?serverTimezone=Australia/Melbourne&user=root&password=");
-		PreparedStatement pstmt = con.prepareStatement("SELECT * FROM ville_france WHERE Code_commune_INSEE LIKE '%?%' AND Nom_commune LIKE '%?%' ORDER BY Nom_commune");
-		pstmt.setString(1, insee);
-		pstmt.setString(2, nomVille);
+		String sql = "SELECT * FROM ville_france WHERE Code_commune_INSEE LIKE '%"+insee+"%' AND Nom_commune LIKE '%"+nomVille+"%' ORDER BY Nom_commune";
+		PreparedStatement pstmt = con.prepareStatement(sql);
 		ResultSet rst = pstmt.executeQuery();
 		List<Ville> villes = new ArrayList<Ville>();	
 		while(rst.next()) {
