@@ -47,16 +47,13 @@ public class VilleDAO {
 		return null;
 	}
 
-	public static void ajouterModifVille(String insee, String nom, String cp, String lati, String longi) throws SQLException {
-		List<Ville> ville = listeVilles(insee, "");
-		System.out.println(ville.get(0).getNom());
+	public static void modifVille(String insee, String nom, String cp, String lati, String longi) throws SQLException {
 		Statement stmt = connection();
-		if (ville.size()>0) {
-			stmt.executeUpdate("UPDATE ville_france SET Code_commune_INSEE='"+insee+"', Nom_commune='"+nom+"', Code_postal='"+cp+"', Latitude='"+lati+"', Longitude='"+longi+"' WHERE Code_commune_INSEE="+insee);
-		} else {
-			stmt.execute("INSERT INTO ville_france (Code_commune_INSEE, Nom_commune, Code_postal, Latitude, Longitude) VALUES ('"+insee+"', '"+nom+"', '"+cp+"', '"+lati+"', '"+longi+"')");
-			
-		}
+		stmt.executeUpdate("UPDATE ville_france SET Code_commune_INSEE='"+insee+"', Nom_commune='"+nom+"', Code_postal='"+cp+"', Latitude='"+lati+"', Longitude='"+longi+"' WHERE Code_commune_INSEE="+insee);}
+	
+	public static void ajouterVille(String insee, String nom, String cp, String lati, String longi) throws SQLException {
+		Statement stmt = connection();
+		stmt.execute("INSERT INTO ville_france (Code_commune_INSEE, Nom_commune, Code_postal, Latitude, Longitude) VALUES ('"+insee+"', '"+nom+"', '"+cp+"', '"+lati+"', '"+longi+"')");
 	}
 
 	public static void supprimerVille(String insee) throws SQLException {

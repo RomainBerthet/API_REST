@@ -29,7 +29,7 @@ public class TestController {
 			@RequestParam(required = true, value="cp") String cp,
 			@RequestParam(required = true, value="lati") String lati,
 			@RequestParam(required = true, value="longi") String longi) throws SQLException {
-		VilleDAO.ajouterModifVille(insee, nom, cp, lati, longi);
+		VilleDAO.modifVille(insee, nom, cp, lati, longi);
 	}
 	
 	@RequestMapping(value="/put", method=RequestMethod.PUT)
@@ -39,7 +39,7 @@ public class TestController {
 			@RequestParam(required = true, value="cp") String cp,
 			@RequestParam(required = true, value="lati") String lati,
 			@RequestParam(required = true, value="longi") String longi) throws SQLException {
-		VilleDAO.ajouterModifVille(insee, nom, cp, lati, longi);
+		VilleDAO.ajouterVille(insee, nom, cp, lati, longi);
 	}
 	
 	@RequestMapping(value="/delete", method=RequestMethod.DELETE)
